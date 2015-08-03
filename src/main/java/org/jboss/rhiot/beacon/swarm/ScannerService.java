@@ -28,16 +28,10 @@ public class ScannerService implements Service<Void> {
         cmdArgParser.parse(args);
 
         // If scannerID is the string {IP}, replace it with the host IP address
-        String scannerID = cmdArgs.scannerID;
-        if(scannerID.compareTo("{IP}") == 0) {
-            char hostIPAddress[] = new char[128];
-            char macaddr[] = new char[32];
-            try {
-                HealthStatus.getHostInfo(hostIPAddress, macaddr);
-                cmdArgs.scannerID = new String(hostIPAddress);
-            } catch (SocketException e) {
-                log.warn("Failed to read host address info", e);
-            }
+        try {
+            cmdArgs.replaceScannerID();
+        } catch (SocketException e) {
+            log.warn("Failed to read host address info", e);
         }
     }
 
